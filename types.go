@@ -21,14 +21,8 @@ import (
 // Check is a health/readiness check.
 type Check func() error
 
-// Handler is an http.Handler with additional methods that register health and
-// readiness checks. It handles handle "/live" and "/ready" HTTP
-// endpoints.
-type Handler interface {
-	// The Handler is an http.Handler, so it can be exposed directly and handle
-	// /live and /ready endpoints.
-	http.Handler
-
+// Registry lets you register liveness and readiness checks
+type Registry interface {
 	// AddLivenessCheck adds a check that indicates that this instance of the
 	// application should be destroyed or restarted. A failed liveness check
 	// indicates that this instance is unhealthy, not some upstream dependency.
@@ -41,6 +35,17 @@ type Handler interface {
 	// should no longer receiver requests, but should not be restarted or
 	// destroyed.
 	AddReadinessCheck(name string, check Check)
+}
+
+// Handler is a Registry and a http.Handler It handles "/live" and "/ready" HTTP
+// endpoints.
+type Handler interface {
+	// The Handler is an http.Handler, so it can be exposed directly and handle
+	// /live and /ready endpoints.
+	http.Handler
+
+	// The Registry is provides methods to register checks
+	Registry
 
 	// LiveEndpoint is the HTTP handler for just the /live endpoint, which is
 	// useful if you need to attach it into your own HTTP handler tree.
