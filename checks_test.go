@@ -20,7 +20,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	sqlmock "gopkg.in/DATA-DOG/go-sqlmock.v1"
+	"gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
 
 func TestTCPDialCheck(t *testing.T) {
@@ -29,7 +29,7 @@ func TestTCPDialCheck(t *testing.T) {
 }
 
 func TestHTTPGetCheck(t *testing.T) {
-	assert.NoError(t, HTTPGetCheck("https://heptio.com", 5*time.Second)())
+	assert.NoError(t, HTTPGetCheck("https://www.google.com", 5*time.Second)())
 	assert.Error(t, HTTPGetCheck("http://heptio.com", 5*time.Second)(), "redirect should fail")
 	assert.Error(t, HTTPGetCheck("https://heptio.com/nonexistent", 5*time.Second)(), "404 should fail")
 }
